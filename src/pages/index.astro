@@ -67,6 +67,15 @@ const posts = (await getCollection('blog'))
 				color: rgb(var(--gray));
 				white-space: nowrap;
 			}
+			@media (max-width: 720px) {
+				ul li a {
+					flex-direction: column;
+					gap: 0.25rem;
+				}
+				.date {
+					white-space: normal;
+				}
+			}
 		</style>
 	</head>
 	<body>
