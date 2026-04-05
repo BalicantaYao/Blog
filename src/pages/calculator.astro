@@ -114,9 +114,9 @@ import Footer from '../components/Footer.astro';
 			<p class="subtitle">以五日均線為停損點，計算應買入的股數</p>
 
 			<div class="form-group">
-				<label for="ma5">五日均線價格（元）</label>
-				<input type="number" id="ma5" placeholder="例：1900" min="0" step="0.01" />
-				<p class="hint">作為停損依據，跌破此價即出場</p>
+				<label for="maxLoss">最大虧損金額（元）</label>
+				<input type="number" id="maxLoss" placeholder="例：2000" min="0" step="1" value="2000" />
+				<p class="hint">單筆交易最多能接受虧損的金額</p>
 			</div>
 
 			<div class="form-group">
@@ -125,12 +125,12 @@ import Footer from '../components/Footer.astro';
 			</div>
 
 			<div class="form-group">
-				<label for="maxLoss">最大虧損金額（元）</label>
-				<input type="number" id="maxLoss" placeholder="例：2000" min="0" step="1" />
-				<p class="hint">單筆交易最多能接受虧損的金額</p>
+				<label for="ma5">五日線停損位（元）</label>
+				<input type="number" id="ma5" placeholder="例：1900" min="0" step="0.01" />
+				<p class="hint">跌破此價即出場</p>
 			</div>
 
-			<button id="calcBtn">計算</button>
+			<button id="calcBtn">計算買入股數</button>
 
 			<div class="error" id="error"></div>
 
