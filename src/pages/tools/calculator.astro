@@ -1,0 +1,219 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<BaseHead title="股票倉位計算機" description="根據五日均線、買入股價與最大虧損金額計算應買股數" />
+		<style>
+			main {
+				max-width: min(480px, calc(100% - 4rem));
+			}
+			.back-link {
+				display: inline-block;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				text-decoration: none;
+				margin-bottom: 1.5rem;
+			}
+			.back-link:hover {
+				color: rgb(var(--accent));
+			}
+			h1 {
+				font-size: 1.6rem;
+				margin-bottom: 0.25rem;
+			}
+			.subtitle {
+				color: rgb(var(--gray));
+				margin-bottom: 2rem;
+				font-size: 0.9rem;
+			}
+			.form-group {
+				margin-bottom: 1.25rem;
+			}
+			label {
+				display: block;
+				font-weight: 600;
+				margin-bottom: 0.35rem;
+				font-size: 0.95rem;
+			}
+			.hint {
+				font-size: 0.8rem;
+				color: rgb(var(--gray));
+				margin-top: 0.2rem;
+			}
+			input[type="number"] {
+				width: 100%;
+				padding: 0.6rem 0.75rem;
+				font-size: 1rem;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 6px;
+				box-sizing: border-box;
+				outline: none;
+				transition: border-color 0.15s;
+			}
+			input[type="number"]:focus {
+				border-color: rgb(var(--accent));
+			}
+			@media (max-width: 720px) {
+				input[type="number"] {
+					font-size: 16px;
+				}
+			}
+			button {
+				width: 100%;
+				padding: 0.7rem;
+				font-size: 1rem;
+				font-weight: 600;
+				background: rgb(var(--accent));
+				color: white;
+				border: none;
+				border-radius: 6px;
+				cursor: pointer;
+				margin-top: 0.5rem;
+				transition: opacity 0.15s;
+			}
+			button:hover {
+				opacity: 0.85;
+			}
+			.result {
+				display: none;
+				margin-top: 1.5rem;
+				padding: 1.25rem;
+				background: rgb(var(--gray-light));
+				border-radius: 8px;
+			}
+			.result.visible {
+				display: block;
+			}
+			.result-main {
+				font-size: 1.8rem;
+				font-weight: 700;
+				color: rgb(var(--accent));
+				margin-bottom: 0.25rem;
+			}
+			.result-label {
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				margin-bottom: 1rem;
+			}
+			.breakdown {
+				border-top: 1px solid rgb(var(--gray-light));
+				padding-top: 0.75rem;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				line-height: 1.8;
+			}
+			.error {
+				display: none;
+				margin-top: 1rem;
+				padding: 0.75rem 1rem;
+				background: #fff0f0;
+				border: 1px solid #ffcccc;
+				border-radius: 6px;
+				color: #cc3333;
+				font-size: 0.9rem;
+			}
+			.error.visible {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<a class="back-link" href="/tools">← 小工具</a>
+			<h1>股票倉位計算機</h1>
+			<p class="subtitle">以五日均線為停損點，計算應買入的股數</p>
+
+			<div class="form-group">
+				<label for="maxLoss">最大虧損金額（元）</label>
+				<input type="number" id="maxLoss" placeholder="例：2000" min="0" step="1" value="2000" />
+				<p class="hint">單筆交易最多能接受虧損的金額</p>
+			</div>
+
+			<div class="form-group">
+				<label for="buyPrice">買入股價（元）</label>
+				<input type="number" id="buyPrice" placeholder="例：2000" min="0" step="0.01" />
+			</div>
+
+			<div class="form-group">
+				<label for="ma5">五日線停損位（元）</label>
+				<input type="number" id="ma5" placeholder="例：1900" min="0" step="0.01" />
+				<p class="hint">跌破此價即出場</p>
+			</div>
+
+			<button id="calcBtn">計算買入股數</button>
+
+			<div class="error" id="error"></div>
+
+			<div class="result" id="result">
+				<div class="result-main" id="shares"></div>
+				<div class="result-label">建議買入股數</div>
+				<div class="breakdown" id="breakdown"></div>
+			</div>
+		</main>
+		<Footer />
+
+		<script>
+			const calcBtn = document.getElementById('calcBtn')!;
+			const resultEl = document.getElementById('result')!;
+			const errorEl = document.getElementById('error')!;
+			const sharesEl = document.getElementById('shares')!;
+			const breakdownEl = document.getElementById('breakdown')!;
+
+			calcBtn.addEventListener('click', () => {
+				const ma5 = parseFloat((document.getElementById('ma5') as HTMLInputElement).value);
+				const buyPrice = parseFloat((document.getElementById('buyPrice') as HTMLInputElement).value);
+				const maxLoss = parseFloat((document.getElementById('maxLoss') as HTMLInputElement).value);
+
+				resultEl.classList.remove('visible');
+				errorEl.classList.remove('visible');
+
+				if (isNaN(ma5) || isNaN(buyPrice) || isNaN(maxLoss)) {
+					errorEl.textContent = '請填寫所有欄位。';
+					errorEl.classList.add('visible');
+					return;
+				}
+				if (ma5 <= 0 || buyPrice <= 0 || maxLoss <= 0) {
+					errorEl.textContent = '所有數值必須大於 0。';
+					errorEl.classList.add('visible');
+					return;
+				}
+				if (buyPrice <= ma5) {
+					errorEl.textContent = '買入股價必須高於五日均線（停損點）。';
+					errorEl.classList.add('visible');
+					return;
+				}
+
+				const riskPerShare = buyPrice - ma5;
+				const shares = Math.floor(maxLoss / riskPerShare);
+				const actualRisk = shares * riskPerShare;
+				const totalCost = shares * buyPrice;
+
+				if (shares === 0) {
+					errorEl.textContent = '最大虧損金額不足以買入任何股份，請調整參數。';
+					errorEl.classList.add('visible');
+					return;
+				}
+
+				sharesEl.textContent = `${shares} 股`;
+				breakdownEl.innerHTML =
+					`每股風險：${buyPrice} − ${ma5} = <strong>${riskPerShare.toFixed(2)} 元</strong><br>` +
+					`實際風險：${shares} × ${riskPerShare.toFixed(2)} = <strong>${actualRisk.toFixed(0)} 元</strong><br>` +
+					`總買入金額：${shares} × ${buyPrice} = <strong>${totalCost.toFixed(0)} 元</strong>`;
+
+				resultEl.classList.add('visible');
+			});
+
+			document.querySelectorAll('input').forEach(input => {
+				input.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter') calcBtn.click();
+				});
+			});
+		</script>
+	</body>
+</html>
