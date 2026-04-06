@@ -1,7 +1,7 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 ---
 
 <!doctype html>
@@ -11,6 +11,16 @@ import Footer from '../components/Footer.astro';
 		<style>
 			main {
 				max-width: min(480px, calc(100% - 4rem));
+			}
+			.back-link {
+				display: inline-block;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				text-decoration: none;
+				margin-bottom: 1.5rem;
+			}
+			.back-link:hover {
+				color: rgb(var(--accent));
 			}
 			h1 {
 				font-size: 1.6rem;
@@ -115,6 +125,7 @@ import Footer from '../components/Footer.astro';
 	<body>
 		<Header />
 		<main>
+			<a class="back-link" href="/tools">← 小工具</a>
 			<h1>股票倉位計算機</h1>
 			<p class="subtitle">以五日均線為停損點，計算應買入的股數</p>
 
@@ -198,7 +209,6 @@ import Footer from '../components/Footer.astro';
 				resultEl.classList.add('visible');
 			});
 
-			// Allow Enter key to trigger calculation
 			document.querySelectorAll('input').forEach(input => {
 				input.addEventListener('keydown', (e) => {
 					if (e.key === 'Enter') calcBtn.click();

@@ -1,0 +1,82 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const tools = [
+	{
+		href: '/tools/calculator',
+		title: '股票倉位計算機',
+		description: '根據五日均線停損位與最大虧損金額，計算應買入的股數。',
+	},
+];
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<BaseHead title="小工具" description="一些實用的小工具" />
+		<style>
+			h1 {
+				font-size: 1.6rem;
+				margin-bottom: 0.25rem;
+			}
+			.subtitle {
+				color: rgb(var(--gray));
+				margin-bottom: 2rem;
+				font-size: 0.9rem;
+			}
+			.tools-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+				gap: 1rem;
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			.tool-card {
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+				padding: 1.25rem 1.5rem;
+				text-decoration: none;
+				color: rgb(var(--black));
+				display: block;
+				transition: border-color 0.15s, box-shadow 0.15s;
+			}
+			.tool-card:hover {
+				border-color: rgb(var(--accent));
+				box-shadow: 0 2px 12px rgba(var(--gray), 20%);
+				color: rgb(var(--black));
+			}
+			.tool-card h2 {
+				font-size: 1rem;
+				margin: 0 0 0.4rem 0;
+				color: rgb(var(--accent));
+			}
+			.tool-card p {
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				margin: 0;
+				line-height: 1.5;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>小工具</h1>
+			<p class="subtitle">一些方便的計算與查詢工具</p>
+			<ul class="tools-grid">
+				{tools.map(tool => (
+					<li>
+						<a class="tool-card" href={tool.href}>
+							<h2>{tool.title}</h2>
+							<p>{tool.description}</p>
+						</a>
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
