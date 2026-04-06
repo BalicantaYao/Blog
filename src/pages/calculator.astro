@@ -48,6 +48,15 @@ import Footer from '../components/Footer.astro';
 			input[type="number"]:focus {
 				border-color: rgb(var(--accent));
 			}
+			@media (max-width: 720px) {
+				main {
+					padding-left: 2rem;
+					padding-right: 2rem;
+				}
+				input[type="number"] {
+					font-size: 16px;
+				}
+			}
 			button {
 				width: 100%;
 				padding: 0.7rem;
