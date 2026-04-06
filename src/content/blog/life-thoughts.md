@@ -1,7 +1,7 @@
 ---
-title: '這幾天我突然想通了很多事情'
+title: '快樂、背誦、還有目標'
 description: '關於快樂、記憶、還有個性這件事。'
-pubDate: 'Apr 06 2026'
+pubDate: 'Mar 15 2026'
 heroImage: '../../assets/blog-placeholder-1.jpg'
 ---
 
