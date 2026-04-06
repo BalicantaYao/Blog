@@ -10,7 +10,7 @@ import Footer from '../components/Footer.astro';
 		<BaseHead title="股票倉位計算機" description="根據五日均線、買入股價與最大虧損金額計算應買股數" />
 		<style>
 			main {
-				max-width: 480px;
+				max-width: min(480px, calc(100% - 4rem));
 			}
 			h1 {
 				font-size: 1.6rem;
@@ -49,10 +49,6 @@ import Footer from '../components/Footer.astro';
 				border-color: rgb(var(--accent));
 			}
 			@media (max-width: 720px) {
-				main {
-					padding-left: 2rem;
-					padding-right: 2rem;
-				}
 				input[type="number"] {
 					font-size: 16px;
 				}
