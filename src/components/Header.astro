@@ -7,7 +7,7 @@ import HeaderLink from './HeaderLink.astro';
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
+			<HeaderLink href="/" class="home-link">Home</HeaderLink>
 			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
 			<HeaderLink href="/calculator">計算機</HeaderLink>
@@ -56,6 +56,13 @@ import HeaderLink from './HeaderLink.astro';
 	@media (max-width: 720px) {
 		.social-links {
 			display: none;
+		}
+		.home-link {
+			display: none;
+		}
+		nav a {
+			padding: 0.75em 0.35em;
+			font-size: 0.9em;
 		}
 	}
 </style>
