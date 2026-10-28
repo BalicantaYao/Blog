@@ -2,10 +2,11 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { withBase } from '../../consts';
 
 const tools = [
 	{
-		href: '/tools/calculator',
+		href: withBase('/tools/calculator'),
 		title: '股票倉位計算機',
 		description: '根據五日均線停損位與最大虧損金額，計算應買入的股數。',
 	},
