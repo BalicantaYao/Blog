@@ -1,17 +1,15 @@
-name: Deploy to GitHub Pages
+name: Build
 
 on:
-  # Trigger the workflow every time you push to the `main` branch
   push:
     branches: [main]
-  # Allows you to run this workflow manually from the Actions tab on GitHub.
+  pull_request:
   workflow_dispatch:
 
-# Allow this job to clone the repo and create a page deployment
+# The site is hosted on Netlify (balicanta.tw). GitHub Pages is not enabled,
+# so the old deploy job failed every push with "Ensure GitHub Pages has been enabled".
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
@@ -19,18 +17,12 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v7
-      - name: Install, build, and upload your site
-        uses: withastro/action@v6
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          package-manager: yarn
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          node-version: 22
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn build
