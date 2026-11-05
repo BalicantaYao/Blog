@@ -1,0 +1,6 @@
+# Old builds prefixed every URL with /Blog (meant for a GitHub project site).
+# On this domain that prefix 404s. /Blog is also case-folded onto the real
+# /blog directory, so these rules are forced.
+/Blog              /            301!
+/Blog/             /            301!
+/Blog/*            /:splat      301!
