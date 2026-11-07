@@ -9,6 +9,10 @@ import { SITE_DESCRIPTION, SITE_TITLE, withBase } from '../consts';
 const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 5);
+
+const dailyThings = (await getCollection('dailyThings'))
+	.sort((a, b) => (a.data.date < b.data.date ? 1 : a.data.date > b.data.date ? -1 : 0))
+	.slice(0, 5);
 ---
 
 <!doctype html>
@@ -33,6 +37,13 @@ const posts = (await getCollection('blog'))
 				letter-spacing: 0.05em;
 				color: rgb(var(--gray));
 				margin-bottom: 0.5rem;
+			}
+			.recent-posts h2.plain {
+				text-transform: none;
+				letter-spacing: 0;
+			}
+			.recent-posts + .recent-posts {
+				margin-top: 2.5rem;
 			}
 			ul {
 				list-style: none;
@@ -87,6 +98,23 @@ const posts = (await getCollection('blog'))
 					記錄一些想法和學習。大量吸收資訊之後，試著用自己的話說出來。
 				</p>
 			</section>
+			{
+				dailyThings.length > 0 && (
+					<section class="recent-posts">
+						<h2 class="plain">Daily Things</h2>
+						<ul>
+							{dailyThings.map((entry) => (
+								<li>
+									<a href={withBase(`/daily-things/${entry.data.date}/`)}>
+										<span class="title">{entry.data.items[0].title}</span>
+										<span class="date">{entry.data.date}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
 			<section class="recent-posts">
 				<h2>最新文章</h2>
 				<ul>
